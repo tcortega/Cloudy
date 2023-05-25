@@ -16,11 +16,11 @@ public class Checker<TInput> where TInput : ICredential
     private readonly Pool<CloudyHttpClient> _httpClientPool;
     private readonly Func<string, IDataParseResult<TInput>> _dataParser;
     private readonly Func<BotData<TInput>, CloudyHttpClient, Task<CheckResult>> _checkerFunc;
-    private readonly OutputHandler<TInput> _outputHandler;
+    private readonly OutputThread<TInput> _outputThread;
     private readonly object _locker = new();
 
     internal Checker(CheckerSettings settings, DataPool dataPool, Pool<CloudyHttpClient> httpClientPool,
-        OutputHandler<TInput> outputHandler, Func<string, IDataParseResult<TInput>> dataParser,
+        OutputThread<TInput> outputThread, Func<string, IDataParseResult<TInput>> dataParser,
         Func<BotData<TInput>, CloudyHttpClient, Task<CheckResult>> checkerFunc)
     {
         _info = new CheckerInfo();
@@ -28,12 +28,14 @@ public class Checker<TInput> where TInput : ICredential
         _dataPool = dataPool;
         _httpClientPool = httpClientPool;
         _dataParser = dataParser;
-        _outputHandler = outputHandler;
+        _outputThread = outputThread;
         _checkerFunc = checkerFunc;
     }
 
     public async Task StartAsync()
     {
+        _ = _outputThread.StartAsync();
+        
         if (_info.Status != CheckerStatus.Idle)
         {
             throw new InvalidOperationException("Checker is already running.");
@@ -74,13 +76,7 @@ public class Checker<TInput> where TInput : ICredential
                 throw new ArgumentOutOfRangeException(nameof(CheckResultStatus), "This enum shouldn't be here at all.");
         }
 
-        lock (_locker)
-        {
-            _outputHandler.OutputFunc(parallelizerResult.Item, checkResult);
-        }
-
-        // ReSharper disable once InconsistentlySynchronizedField
-        _outputHandler.AfterOutputAsync?.Invoke(parallelizerResult.Item, checkResult);
+        _outputThread.AddItem(parallelizerResult.Item, checkResult);
     }
 
     private async Task<CheckResult> WorkFunction(BotData<TInput> botData, CancellationToken token)

@@ -107,8 +107,9 @@ public class CheckerBuilder<TInput> where TInput : ICredential
     {
         SetupMiscellaneous();
         var httpClientPool = SetupHttpClientPool();
+        var outputThread = new OutputThread<TInput>(_outputHandler, _settings.CancellationToken, _settings.OutputDelay);
 
-        return new Checker<TInput>(_settings, _dataPool, httpClientPool, _outputHandler, _dataParser, _checkerFunc);
+        return new Checker<TInput>(_settings, _dataPool, httpClientPool, outputThread, _dataParser, _checkerFunc);
     }
 
     private Pool<CloudyHttpClient> SetupHttpClientPool()
