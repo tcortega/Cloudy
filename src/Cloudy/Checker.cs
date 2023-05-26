@@ -17,7 +17,6 @@ public class Checker<TInput> where TInput : ICredential
     private readonly Func<string, IDataParseResult<TInput>> _dataParser;
     private readonly Func<BotData<TInput>, CloudyHttpClient, Task<CheckResult>> _checkerFunc;
     private readonly OutputThread<TInput> _outputThread;
-    private readonly object _locker = new();
 
     internal Checker(CheckerSettings settings, DataPool dataPool, Pool<CloudyHttpClient> httpClientPool,
         OutputThread<TInput> outputThread, Func<string, IDataParseResult<TInput>> dataParser,
@@ -50,6 +49,7 @@ public class Checker<TInput> where TInput : ICredential
         parallelizer.NewResult += ProcessParallelizerResult;
         await parallelizer.Start();
         await parallelizer.WaitCompletion();
+        _settings.CancellationTokenSource.Cancel(); // Makes sure that the OutputThread will be stopped
     }
 
     private void ProcessParallelizerResult(object? sender,

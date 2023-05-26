@@ -27,7 +27,7 @@ public class OutputThread<T> where T : ICredential
     {
         try
         {
-            while (true)
+            while (!_cancellationToken.IsCancellationRequested)
             {
                 await Task.Delay(_delay, _cancellationToken);
                 if (_items.IsEmpty) continue;
