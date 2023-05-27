@@ -11,7 +11,7 @@ public class InfiniteDataPool : DataPool
         Size = int.MaxValue;
     }
 
-    private IEnumerable<string> InfiniteCounter()
+    private static IEnumerable<string> InfiniteCounter()
     {
         while (true) yield return string.Empty;
     }

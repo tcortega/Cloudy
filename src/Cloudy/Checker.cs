@@ -73,7 +73,7 @@ public class Checker<TInput> where TInput : ICredential
                 break;
             case CheckResultStatus.Retry:
             default:
-                throw new ArgumentOutOfRangeException(nameof(CheckResultStatus), "This enum shouldn't be here at all.");
+                throw new ArgumentOutOfRangeException($"Unexpected value for CheckResultStatus: {checkResult.Status}");
         }
 
         _outputThread.AddItem(parallelizerResult.Item, checkResult);
