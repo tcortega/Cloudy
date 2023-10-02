@@ -33,7 +33,7 @@ jobs:
       - name: Package
         run: dotnet pack -c Release --no-build --property:PackageOutputPath=../../nupkgs
       - name: Push to Nuget
-        run: dotnet nuget push "./nupkgs/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGETPUBLISHKEY }}
+        run: dotnet nuget push "./nupkgs/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGET_APIKEY }}
 
       - name: Create Release
         uses: ncipollo/release-action@v1
