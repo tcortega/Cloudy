@@ -38,13 +38,6 @@ public class CheckerTests
         await checker.Start();
         await checker.WaitCompletion();
 
-        // var checker = new ComboCheckerBuilder(new CheckerSettings(), dataPool, _checkerFunc)
-        //     .WithOutputHandler(outputHandler)
-        //     .Build();
-        //
-        // checker.StartAsync().Wait();
-        //
-
         await Task.Delay(25);
         outputHandler.ReceivedItems.Should().Be(5);
         outputHandler.ReceivedHits.Should().Be(1);
