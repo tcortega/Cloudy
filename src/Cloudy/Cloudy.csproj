@@ -6,8 +6,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>default</LangVersion>
-
-        <!-- Nuget Metadata -->
+    </PropertyGroup>
+    
+    <PropertyGroup Label="NuGet">
         <Authors>tcortega</Authors>
         <Description>Cloudy is a library for pentesting web apps against credential stuffing attacks. It allows you to build highly concurrent applications.</Description>
         <PackageProjectUrl>https://github.com/tcortega/Cloudy</PackageProjectUrl>
@@ -15,12 +16,11 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <RepositoryUrl>https://github.com/viceroypenguin/SuperLinq</RepositoryUrl>
+        <RepositoryUrl>https://github.com/tcortega/Cloudy</RepositoryUrl>
 
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
-
 
     <ItemGroup>
       <ProjectReference Include="..\Cloudy.Parallelization\Cloudy.Parallelization.csproj" />

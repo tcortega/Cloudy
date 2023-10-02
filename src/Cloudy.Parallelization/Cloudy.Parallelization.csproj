@@ -8,4 +8,32 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
 
+    <PropertyGroup Label="NuGet">
+        <Authors>tcortega</Authors>
+        <Description>This is a library that can perform multiple tasks (yes, a lot, even infinitely many) that act on some input and return a certain output.
+        This library is a copy paste of `RuriLib.Parallelization` from RuriLib, with some fixes and the code cleaned up.
+        </Description>
+        <PackageProjectUrl>https://github.com/tcortega/Cloudy</PackageProjectUrl>
+        <PackageTags>parallelization,parallelizer,concurrency,threading,concurrent</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryUrl>https://github.com/tcortega/Cloudy</RepositoryUrl>
+
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MinVer" Version="4.3.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+    <PropertyGroup Label="MinVer">
+        <MinVerAutoIncrement>minor</MinVerAutoIncrement>
+        <MinVerDefaultPreReleaseIdentifiers>preview.0</MinVerDefaultPreReleaseIdentifiers>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
+    </PropertyGroup>
 </Project>
