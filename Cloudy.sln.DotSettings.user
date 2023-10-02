@@ -1,0 +1,8 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=33ba6095_002D4084_002D4438_002D9a76_002D815c752945b7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ParallelizerTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::F4907A97-18C3-452D-B8F3-9340DEA30677::net7.0::Cloudy.Parallelization.Test.ParallelizerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::F4C131FD-B62F-4A9D-8A18-50372F76EF34::net7.0::Cloudy.Test.CheckerBuilderTests.WithProxies_ShouldSetUseProxiesToTrue&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::F4C131FD-B62F-4A9D-8A18-50372F76EF34::net7.0::Cloudy.Test.CheckerTests.CheckerShouldBeOutputtedCorrectly&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

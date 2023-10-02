@@ -1,5 +1,4 @@
 ﻿using System.Security.Authentication;
-using Cloudy.Common;
 using Cloudy.Http;
 using Cloudy.Models.Checker;
 using Cloudy.Models.Data;
@@ -17,24 +16,22 @@ public class CheckerBuilder<TInput> where TInput : ICredential
 {
     private readonly CheckerSettings _settings;
     private readonly DataPool _dataPool;
-    private readonly Func<string, IDataParseResult<TInput>> _dataParser;
-    private readonly Func<BotData<TInput>, CloudyHttpClient, Task<CheckResult>> _checkerFunc;
+    private readonly DataParser<TInput> _dataParser;
+    private readonly CheckerDelegate<TInput> _checkerFunc;
     private readonly Dictionary<string, string> _defaultRequestHeaders = new();
 
-    private OutputHandler<TInput> _outputHandler = new FileOutputHandler<TInput>();
+    private readonly List<OutputHandler<TInput>> _outputHandlers = new();
     private List<Proxy>? _proxies;
     private ProxySettings? _proxySettings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CheckerBuilder{TInput}"/> class.
     /// </summary>
-    /// <param name="settings">The settings for the Checker.</param>
-    /// <param name="dataPool">The data pool for the Checker.</param>
-    /// <param name="dataParser">The data parser for the Checker.</param>
-    /// <param name="checkerFunc">The checking function for the Checker.</param>
-    public CheckerBuilder(CheckerSettings settings, DataPool dataPool,
-        Func<string, IDataParseResult<TInput>> dataParser,
-        Func<BotData<TInput>, CloudyHttpClient, Task<CheckResult>> checkerFunc)
+    /// <param name="settings">The <see cref="CheckerSettings" /> for the Checker.</param>
+    /// <param name="dataPool">The <see cref="DataPool" /> with the items the Checker will process.</param>
+    /// <param name="dataParser">The <see cref="DataParser{TInput}"/> delegate.</param>
+    /// <param name="checkerFunc">The <see cref="CheckerDelegate{TInput}"/> of the checker function.</param>
+    public CheckerBuilder(CheckerSettings settings, DataPool dataPool, DataParser<TInput> dataParser, CheckerDelegate<TInput> checkerFunc)
     {
         _settings = settings;
         _dataPool = dataPool;
@@ -72,7 +69,7 @@ public class CheckerBuilder<TInput> where TInput : ICredential
     /// <summary>
     /// Configures the CheckerBuilder to use a specific SSL Protocol.
     /// </summary>
-    /// <param name="protocol">The SSL protocol to use.</param>
+    /// <param name="protocol">The <see cref="SslProtocols"/> to use.</param>
     /// <returns>The current CheckerBuilder instance.</returns>
     public CheckerBuilder<TInput> WithSslProtocol(SslProtocols protocol)
     {
@@ -80,6 +77,12 @@ public class CheckerBuilder<TInput> where TInput : ICredential
         return this;
     }
 
+    /// <summary>
+    /// Adds a request header that will be used for every request made by every <see cref="CloudyHttpClient"/> in the pool.
+    /// </summary>
+    /// <param name="name">The header's name.</param>
+    /// <param name="value">The header's value.</param>
+    /// <returns></returns>
     public CheckerBuilder<TInput> WithDefaultRequestHeader(string name, string value)
     {
         _defaultRequestHeaders.Add(name, value);
@@ -87,6 +90,11 @@ public class CheckerBuilder<TInput> where TInput : ICredential
         return this;
     }
 
+    /// <summary>
+    /// Adds multiple request headers that will be used for every request made by every <see cref="CloudyHttpClient"/> in the pool.
+    /// </summary>
+    /// <param name="headers">The request headers dictionary.</param>
+    /// <returns></returns>
     public CheckerBuilder<TInput> WithDefaultRequestHeaders(IDictionary<string, string> headers)
     {
         foreach (var header in headers)
@@ -97,17 +105,25 @@ public class CheckerBuilder<TInput> where TInput : ICredential
         return this;
     }
 
-    public CheckerBuilder<TInput> WithOutputHandler(OutputHandler<TInput> outputHandler)
+    /// <summary>
+    /// Sets the <see cref="OutputHandler{TInput}"/> for the Checker.
+    /// </summary>
+    /// <param name="outputHandler">The <see cref="OutputHandler{TInput}"/></param>
+    /// <returns></returns>
+    public CheckerBuilder<TInput> AddOutputHandler(OutputHandler<TInput> outputHandler)
     {
-        _outputHandler = outputHandler;
+        _outputHandlers.Add(outputHandler);
         return this;
     }
 
+    /// <summary>
+    /// Builds the <see cref="Checker{TInput}"/> instance with the set configurations.
+    /// </summary>
+    /// <returns>The constructed <see cref="Checker{TInput}"/> instance.</returns>
     public Checker<TInput> Build()
     {
-        SetupMiscellaneous();
         var httpClientPool = SetupHttpClientPool();
-        var outputThread = new OutputThread<TInput>(_outputHandler, _settings.CancellationToken, _settings.OutputDelay);
+        var outputThread = new OutputThread<TInput>(_outputHandlers, _settings.CancellationToken, _settings.OutputDelay);
 
         return new Checker<TInput>(_settings, _dataPool, httpClientPool, outputThread, _dataParser, _checkerFunc);
     }
@@ -127,13 +143,14 @@ public class CheckerBuilder<TInput> where TInput : ICredential
         }
         else
         {
-            httpClientList = new List<CloudyHttpClient> { unproxifiedClient };
+            httpClientList = new() { unproxifiedClient };
         }
-        
+
         SetDefaultRequestHeaders(httpClientList);
 
         const int proxylessPoolSize = 1;
-        var pool = Pool<CloudyHttpClient>.Create(httpClientList, _proxies is null ? proxylessPoolSize : _settings.MaxThreads);
+        var pool = Pool<CloudyHttpClient>.Create(httpClientList,
+            _proxies is null ? proxylessPoolSize : _settings.MaxThreads);
         return pool;
     }
 
@@ -146,10 +163,5 @@ public class CheckerBuilder<TInput> where TInput : ICredential
                 httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
             }
         }
-    }
-
-    private void SetupMiscellaneous()
-    {
-        Directory.CreateDirectory(_outputHandler.Directory);
     }
 }

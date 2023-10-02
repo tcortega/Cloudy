@@ -38,7 +38,7 @@ public class Pool<T>
         var i = 0;
         while (Items.Count < MaxSize)
         {
-            Items.Add(items[i++]);
+            Items.Add(items[i++ % items.Count]);
         }
     }
 

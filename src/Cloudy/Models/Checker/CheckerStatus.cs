@@ -3,6 +3,11 @@
 public enum CheckerStatus
 {
     Idle,
-    Done,
-    Running
+    Starting,
+    Completed,
+    Resuming,
+    Pausing,
+    Running,
+    Paused,
+    Stopping
 }
