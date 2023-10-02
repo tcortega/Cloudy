@@ -5,6 +5,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <LangVersion>default</LangVersion>
 
         <!-- Nuget Metadata -->
         <Authors>tcortega</Authors>
@@ -12,12 +13,31 @@
         <PackageProjectUrl>https://github.com/tcortega/Cloudy</PackageProjectUrl>
         <PackageTags>pentest,credential-stuffing,checker,concurrent</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <LangVersion>default</LangVersion>
+
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryUrl>https://github.com/viceroypenguin/SuperLinq</RepositoryUrl>
+
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
 
     <ItemGroup>
       <ProjectReference Include="..\Cloudy.Parallelization\Cloudy.Parallelization.csproj" />
     </ItemGroup>
+
+
+    <ItemGroup>
+      <PackageReference Include="MinVer" Version="4.3.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+    <PropertyGroup Label="MinVer">
+        <MinVerAutoIncrement>minor</MinVerAutoIncrement>
+        <MinVerDefaultPreReleaseIdentifiers>preview.0</MinVerDefaultPreReleaseIdentifiers>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
+    </PropertyGroup>
 
 </Project>

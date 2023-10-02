@@ -1,58 +1,42 @@
-name: release
+name: Release
+
 on:
   workflow_dispatch:
   push:
-    branches:
-      - 'master'
+    tags:
+      - '**'
+
+permissions:
+  contents: write
+
+jobs:
   release:
-    types:
-      - created
-  
-env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-  DOTNET_NOLOGO: true
-  NuGetDirectory: ${{ github.workspace }}/nuget
 
-defaults:
-  run:
-    shell: pwsh
-
-jobs:  
-  nuget_pack:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
-      
-      # Publish the package as an artifact, to be used in the following jobs
-      - run: dotnet pack src/Cloudy -c Release -o ${{ env.NuGetDirectory }}
-
-      - uses: actions/upload-artifact@v3
         with:
-          name: nuget
-          if-no-files-found: error
-          retention-days: 7
-          path: ${{ env.NuGetDirectory }}/*.nupkg
-  
-  deploy:
-    needs: nuget_pack
-    if: github.event_name == 'release'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v3
+          dotnet-version: |
+            3.1.x
+            6.0.x
+            7.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      - name: Package
+        run: dotnet pack -c Release --no-build --property:PackageOutputPath=../../nupkgs
+      - name: Push to Nuget
+        run: dotnet nuget push "./nupkgs/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.NUGETPUBLISHKEY }}
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
         with:
-          name: nuget
-          path: ${{ env.NuGetDirectory }}
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-
-      - name: Publish NuGet package
-        run: |
-          foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include *.nupkg)) {
-              dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
-          }
+          generateReleaseNotes: 'true'
+          makeLatest: 'true'
