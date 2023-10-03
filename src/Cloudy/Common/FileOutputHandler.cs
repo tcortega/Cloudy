@@ -10,11 +10,11 @@ public class FileOutputHandler<TInput> : OutputHandler<TInput> where TInput : IC
     private readonly string _directory;
     private readonly string _separator;
 
-    public FileOutputHandler(string? directory = null, string separator = " | ",
+    public FileOutputHandler(string? directory = null, string resultsFolderName = "results", string separator = " | ",
         Func<BotData<TInput>, CheckResult, Task>? afterOutputAsync = null) : base(afterOutputAsync)
     {
         var folderName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(DateTime.Now.ToString("MMM dd, yyyy — HH.mm.ss"));
-        _directory = directory ?? Path.Combine("results", folderName);
+        _directory = directory ?? Path.Combine(resultsFolderName, folderName);
         _separator = separator;
 
         EnsureDirectoryCreated(_directory);
