@@ -31,8 +31,10 @@ public class FileOutputHandler<TInput> : OutputHandler<TInput> where TInput : IC
                 .Where(c => !string.IsNullOrWhiteSpace(c.Value.ToString()))
                 .Select(c => $"{c.Key} = {c.Value}");
 
-            outputBuilder.Append(_separator).AppendJoin(_separator, captures).Append(Environment.NewLine);
+            outputBuilder.Append(_separator).AppendJoin(_separator, captures);
         }
+
+        outputBuilder.Append(Environment.NewLine);
 
         var outputPath = Path.Combine(_directory, $"{checkResult.Status.ToStringFast()}.txt");
         await File.AppendAllTextAsync(outputPath, outputBuilder.ToString());
