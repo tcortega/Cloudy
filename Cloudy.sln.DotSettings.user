@@ -4,5 +4,6 @@
     &lt;TestId&gt;xUnit::F4907A97-18C3-452D-B8F3-9340DEA30677::net7.0::Cloudy.Parallelization.Test.ParallelizerTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::F4C131FD-B62F-4A9D-8A18-50372F76EF34::net7.0::Cloudy.Test.CheckerBuilderTests.WithProxies_ShouldSetUseProxiesToTrue&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::F4C131FD-B62F-4A9D-8A18-50372F76EF34::net7.0::Cloudy.Test.CheckerTests.CheckerShouldBeOutputtedCorrectly&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::F4C131FD-B62F-4A9D-8A18-50372F76EF34::net7.0::Cloudy.Test.ComboCheckerTests.CheckerShouldBeOutputtedCorrectly&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

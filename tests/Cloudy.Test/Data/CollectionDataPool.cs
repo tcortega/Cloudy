@@ -2,9 +2,9 @@
 
 namespace Cloudy.Test.Data;
 
-public class SampleDataPool : DataPool
+public class CollectionDataPool : DataPool
 {
-    public SampleDataPool(IReadOnlyCollection<string> credentials)
+    public CollectionDataPool(IReadOnlyCollection<string> credentials)
     {
         DataList = credentials;
         Size = credentials.Count;

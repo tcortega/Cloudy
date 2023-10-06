@@ -25,12 +25,12 @@ public class CheckerTests
         new(Guid.NewGuid(), CheckResultStatus.Error)
     };
     
-    private SampleDataPool DataPool => new(_fakeData.Select(x => $"{x.Id}:{x.ExpectedStatus:D}").ToList());
+    private CollectionDataPool DataPool => new(_fakeData.Select(x => $"{x.Id}:{x.ExpectedStatus:D}").ToList());
     
     [Fact]
     public async Task CheckerShouldBeOutputtedCorrectly()
     {
-        var outputHandler = new SampleOutputHandler();
+        var outputHandler = new SampleOutputHandler<SampleCredential>();
         var checker = new CheckerBuilder<SampleCredential>(new(ThreadCount, ThreadCount), DataPool, SampleCredential.Parser, _checkerFunc)
             .AddOutputHandler(outputHandler)
             .Build();

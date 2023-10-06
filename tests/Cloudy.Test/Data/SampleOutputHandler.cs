@@ -3,7 +3,7 @@ using Cloudy.Models.Data;
 
 namespace Cloudy.Test.Data;
 
-public class SampleOutputHandler : OutputHandler<SampleCredential>
+public class SampleOutputHandler<T> : OutputHandler<T> where T : ICredential
 {
     public int ReceivedItems { get; private set; }
     public int ReceivedHits { get; private set; }
@@ -12,12 +12,12 @@ public class SampleOutputHandler : OutputHandler<SampleCredential>
     public int ReceivedRetries { get; private set; }
     public int ReceivedErrors { get; private set; }
     
-    public SampleOutputHandler(Func<BotData<SampleCredential>, CheckResult, Task>? afterOutputAsync = null) 
+    public SampleOutputHandler(Func<BotData<T>, CheckResult, Task>? afterOutputAsync = null) 
         : base(afterOutputAsync)
     {
     }
 
-    public override Task OutputFuncAsync(BotData<SampleCredential> botData, CheckResult checkResult)
+    public override Task OutputFuncAsync(BotData<T> botData, CheckResult checkResult)
     {
         ReceivedItems++;
 
